@@ -1,0 +1,15 @@
+cat-meow.ogg
+Source: https://opengameart.org/content/meow
+License: CC0
+
+kitten-mew.ogg
+Source: https://opengameart.org/content/kitten-mew
+License: CC0
+
+cat-soft-mew.wav
+Source: https://opengameart.org/content/cat-purr-meow
+License: CC0
+
+cat-food-mew.wav
+Source: https://opengameart.org/content/cat-purr-meow
+License: CC0

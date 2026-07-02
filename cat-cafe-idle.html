@@ -1,0 +1,1968 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>猫咪咖啡店</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --cream: #fff8ea;
+      --paper: #fffdf7;
+      --mint: #bfe9d0;
+      --mint-2: #7cc89a;
+      --peach: #ffb79b;
+      --peach-2: #ef7c6c;
+      --sky: #a9d9ec;
+      --blue: #4d86a7;
+      --lemon: #ffe49a;
+      --wood: #c58b5b;
+      --ink: #3f352f;
+      --muted: #84756a;
+      --line: #eadbc8;
+      --shadow: rgba(79, 55, 35, 0.16);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      background: var(--cream);
+      color: var(--ink);
+      overflow: hidden;
+    }
+
+    body {
+      height: 100vh;
+      padding: 12px;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(169, 217, 236, 0.45), transparent 24%),
+        radial-gradient(circle at 86% 18%, rgba(255, 183, 155, 0.35), transparent 24%),
+        linear-gradient(135deg, #fff8ea 0%, #f8f0de 46%, #edf8f0 100%);
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    button,
+    select {
+      border-radius: 8px;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      color: var(--ink);
+      transition: transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.46;
+    }
+
+    .app {
+      width: min(1280px, 100%);
+      height: calc(100vh - 24px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .topbar,
+    .scene-card,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.9);
+      box-shadow: 0 16px 42px var(--shadow);
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(240px, 0.75fr) minmax(430px, 1.4fr) auto;
+      gap: 12px;
+      align-items: stretch;
+      padding: 8px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      padding: 4px 8px;
+    }
+
+    .logo-cat {
+      width: 50px;
+      height: 50px;
+      flex: 0 0 auto;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 8px rgba(79, 55, 35, 0.16));
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .resources {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .resource {
+      min-width: 0;
+      border: 1px solid rgba(234, 219, 200, 0.86);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #fff4df;
+    }
+
+    .resource:nth-child(2) {
+      background: #eaf8ef;
+    }
+
+    .resource:nth-child(3) {
+      background: #eaf5fb;
+    }
+
+    .resource:nth-child(4) {
+      background: #fff0e8;
+    }
+
+    .resource:nth-child(5) {
+      background: #fff6cc;
+    }
+
+    .resource span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .resource strong {
+      display: block;
+      margin-top: 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 21px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .sound-btn {
+      min-width: 92px;
+      border: 1px solid var(--line);
+      background: #fffaf0;
+      font-weight: 800;
+      padding: 0 14px;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: minmax(440px, 1.1fr) minmax(340px, 0.95fr) minmax(320px, 0.95fr);
+      gap: 14px;
+      align-items: stretch;
+      min-height: 0;
+    }
+
+    .scene-card {
+      height: 100%;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+    }
+
+    .day-strip {
+      padding: 12px 16px 10px;
+      display: grid;
+      gap: 10px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 253, 247, 0.8);
+    }
+
+    .day-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .day-line h2 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+
+    .day-line span {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .progress {
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #eadbc8;
+    }
+
+    .progress > div {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--peach-2), var(--mint-2));
+      transition: width 0.2s ease;
+    }
+
+    .cafe-scene {
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+      background:
+        linear-gradient(180deg, rgba(255, 253, 247, 0.92) 0 58%, #f1d3ac 58% 100%),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.25), transparent);
+    }
+
+    .window {
+      position: absolute;
+      left: 6%;
+      top: 6%;
+      width: 34%;
+      height: 29%;
+      border: 4px solid #8bb6ae;
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 78% 24%, #ffe49a 0 12%, transparent 13%),
+        linear-gradient(180deg, #dff4f8, #edf9fb 62%, #bfe9d0 63%);
+      box-shadow: inset 0 0 0 3px rgba(255, 253, 247, 0.72);
+    }
+
+    .window::before,
+    .window::after {
+      content: "";
+      position: absolute;
+      background: rgba(79, 134, 167, 0.32);
+    }
+
+    .window::before {
+      left: 50%;
+      top: 0;
+      width: 3px;
+      height: 100%;
+    }
+
+    .window::after {
+      left: 0;
+      top: 50%;
+      width: 100%;
+      height: 3px;
+    }
+
+    .shelf {
+      position: absolute;
+      right: 8%;
+      top: 15%;
+      width: 36%;
+      height: 12px;
+      border-radius: 999px;
+      background: #b8835b;
+      box-shadow: 0 8px 0 rgba(139, 95, 65, 0.12);
+    }
+
+    .cups {
+      position: absolute;
+      right: 12%;
+      top: 8%;
+      display: flex;
+      gap: 12px;
+    }
+
+    .cup {
+      width: 30px;
+      height: 42px;
+      border: 3px solid var(--ink);
+      border-radius: 6px 6px 10px 10px;
+      background: var(--sky);
+      transform: rotate(-2deg);
+    }
+
+    .cup:nth-child(2) {
+      background: var(--peach);
+      transform: rotate(3deg);
+    }
+
+    .cup:nth-child(3) {
+      background: var(--mint);
+    }
+
+    .cup:nth-child(4) {
+      background: var(--lemon);
+      transform: rotate(4deg);
+    }
+
+    .counter {
+      position: absolute;
+      left: 6%;
+      right: 6%;
+      bottom: 4%;
+      height: 24%;
+      border: 4px solid #855b3f;
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, #eab987 0 22%, #c58b5b 22% 100%);
+      box-shadow: inset 0 18px 0 rgba(255, 253, 247, 0.18);
+      z-index: 4;
+    }
+
+    .machine {
+      position: absolute;
+      right: 12%;
+      bottom: 24%;
+      width: 118px;
+      height: 136px;
+      border: 4px solid var(--ink);
+      border-radius: 8px;
+      background: #8fcdb1;
+      box-shadow: inset 0 -12px 0 rgba(61, 53, 47, 0.09);
+      z-index: 3;
+    }
+
+    .machine::before {
+      content: "";
+      position: absolute;
+      left: 20px;
+      top: 17px;
+      width: 70px;
+      height: 34px;
+      border: 3px solid var(--ink);
+      border-radius: 7px;
+      background: #fffdf7;
+    }
+
+    .machine::after {
+      content: "";
+      position: absolute;
+      left: 46px;
+      top: 61px;
+      width: 18px;
+      height: 26px;
+      border-radius: 2px;
+      background: var(--ink);
+      box-shadow: -12px 41px 0 -2px #fffdf7, 12px 41px 0 -2px #fffdf7;
+    }
+
+    .customer {
+      position: absolute;
+      right: 7%;
+      bottom: 30%;
+      width: 82px;
+      height: 118px;
+      transform: translateY(var(--bounce, 0px));
+      transition: transform 0.18s ease;
+      z-index: 3;
+    }
+
+    .customer-head {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto;
+      border: 3px solid var(--ink);
+      border-radius: 50%;
+      background: var(--lemon);
+      position: relative;
+    }
+
+    .customer-head::before,
+    .customer-head::after {
+      content: "";
+      position: absolute;
+      top: 23px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ink);
+    }
+
+    .customer-head::before {
+      left: 17px;
+    }
+
+    .customer-head::after {
+      right: 17px;
+    }
+
+    .customer-body {
+      width: 66px;
+      height: 64px;
+      margin: -2px auto 0;
+      border: 3px solid var(--ink);
+      border-radius: 8px 8px 18px 18px;
+      background: var(--sky);
+    }
+
+    .scene-cats {
+      position: absolute;
+      left: 5%;
+      right: 26%;
+      bottom: 36%;
+      height: 36%;
+      pointer-events: auto;
+      z-index: 5;
+    }
+
+    .scene-cat {
+      position: absolute;
+      width: clamp(92px, 11.5vw, 136px);
+      transform: translate(-50%, 0);
+      filter: drop-shadow(0 10px 9px rgba(79, 55, 35, 0.22));
+      transform-origin: 50% 92%;
+      cursor: pointer;
+      animation: cat-idle 3s ease-in-out infinite;
+    }
+
+    .scene-cat.cat-motion-1 {
+      animation-name: cat-sway;
+      animation-duration: 3.4s;
+    }
+
+    .scene-cat.cat-motion-2 {
+      animation-name: cat-hop;
+      animation-duration: 2.8s;
+    }
+
+    .scene-cat.cat-motion-3 {
+      animation-name: cat-nod;
+      animation-duration: 3.2s;
+    }
+
+    .scene-cat.meow-pop {
+      animation: cat-pop 0.42s ease;
+    }
+
+    .scene-cat img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .role-tag {
+      position: absolute;
+      left: 50%;
+      bottom: -4px;
+      transform: translateX(-50%);
+      min-width: 66px;
+      padding: 5px 8px;
+      border: 1px solid rgba(63, 53, 47, 0.15);
+      border-radius: 999px;
+      background: rgba(255, 253, 247, 0.92);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      text-align: center;
+      box-shadow: 0 5px 12px rgba(79, 55, 35, 0.12);
+    }
+
+    @keyframes cat-idle {
+      0%,
+      100% {
+        translate: 0 0;
+        rotate: 0deg;
+      }
+      50% {
+        translate: 0 -6px;
+        rotate: -1deg;
+      }
+    }
+
+    @keyframes cat-sway {
+      0%,
+      100% {
+        translate: 0 0;
+        rotate: -2deg;
+      }
+      50% {
+        translate: 0 -4px;
+        rotate: 2deg;
+      }
+    }
+
+    @keyframes cat-hop {
+      0%,
+      100% {
+        translate: 0 0;
+        scale: 1;
+      }
+      45% {
+        translate: 0 -10px;
+        scale: 1.03;
+      }
+    }
+
+    @keyframes cat-nod {
+      0%,
+      100% {
+        translate: 0 0;
+      }
+      35% {
+        translate: 0 3px;
+        rotate: 1deg;
+      }
+      70% {
+        translate: 0 -5px;
+        rotate: -1deg;
+      }
+    }
+
+    @keyframes cat-pop {
+      0%,
+      100% {
+        translate: 0 0;
+        scale: 1;
+      }
+      45% {
+        translate: 0 -14px;
+        scale: 1.08;
+      }
+    }
+
+    .toast {
+      margin: 0 16px 14px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(79, 134, 167, 0.22);
+      border-radius: 8px;
+      background: #fffaf0;
+      color: var(--blue);
+      font-weight: 900;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .panel {
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-header h2 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .panel-header small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .pill {
+      flex: 0 0 auto;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(79, 134, 167, 0.2);
+      background: #eaf5fb;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 900;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .orders,
+    .cats,
+    .upgrades {
+      display: grid;
+      gap: 9px;
+      padding: 12px;
+      overflow: auto;
+      min-height: 0;
+    }
+
+    .orders {
+      flex: 1 1 190px;
+    }
+
+    .cats {
+      flex: 1 1 260px;
+    }
+
+    .upgrades {
+      flex: 1 1 170px;
+    }
+
+    .order-card,
+    .cat-card,
+    .upgrade-card,
+    .action-box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffaf0;
+      box-shadow: 0 8px 20px rgba(79, 55, 35, 0.08);
+    }
+
+    .order-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 10px;
+      align-items: center;
+    }
+
+    .order-main strong,
+    .upgrade-card strong {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .order-main span,
+    .upgrade-card span,
+    .cat-info span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .patience {
+      height: 8px;
+      margin-top: 9px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #eadbc8;
+    }
+
+    .patience > div {
+      height: 100%;
+      width: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--mint-2), var(--peach-2));
+    }
+
+    .serve-btn,
+    .buy-btn,
+    .small-btn {
+      min-height: 32px;
+      min-width: 68px;
+      padding: 7px 9px;
+      background: var(--ink);
+      color: #fffdf7;
+      font-weight: 900;
+      border: 1px solid rgba(63, 53, 47, 0.18);
+    }
+
+    .empty {
+      padding: 14px 12px;
+      border: 1px dashed #dfcab3;
+      border-radius: 8px;
+      color: var(--muted);
+      text-align: center;
+      background: rgba(255, 250, 240, 0.7);
+    }
+
+    .actions {
+      display: grid;
+      gap: 8px;
+      padding: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .big-btn {
+      min-height: 46px;
+      padding: 7px;
+      border: 2px solid rgba(63, 53, 47, 0.12);
+      box-shadow: 0 8px 0 rgba(88, 184, 131, 0.2);
+      background: var(--mint);
+      font-weight: 950;
+    }
+
+    .big-btn:nth-child(2) {
+      background: var(--sky);
+      box-shadow: 0 8px 0 rgba(79, 134, 167, 0.18);
+    }
+
+    .big-btn:nth-child(3) {
+      background: var(--peach);
+      box-shadow: 0 8px 0 rgba(239, 124, 108, 0.18);
+    }
+
+    .big-btn:nth-child(4) {
+      background: var(--lemon);
+      box-shadow: 0 8px 0 rgba(197, 139, 91, 0.18);
+    }
+
+    .big-btn strong,
+    .big-btn span {
+      display: block;
+      line-height: 1.2;
+    }
+
+    .big-btn span {
+      margin-top: 3px;
+      color: rgba(63, 53, 47, 0.72);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .action-box {
+      padding: 8px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .metric-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .metric-line strong {
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .cat-card {
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr);
+      gap: 10px;
+      padding: 10px;
+      align-items: center;
+    }
+
+    .cat-card.locked {
+      background: #f5ecdf;
+    }
+
+    .cat-portrait {
+      width: 74px;
+      height: 74px;
+      border: 1px solid rgba(63, 53, 47, 0.14);
+      border-radius: 8px;
+      background: linear-gradient(180deg, #fffdf7, #f4e9d5);
+      object-fit: contain;
+      filter: drop-shadow(0 6px 6px rgba(79, 55, 35, 0.14));
+    }
+
+    .cat-card.locked .cat-portrait {
+      filter: grayscale(0.72) opacity(0.62);
+    }
+
+    .cat-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .cat-title strong {
+      overflow-wrap: anywhere;
+      font-size: 16px;
+    }
+
+    .mood {
+      height: 9px;
+      margin: 8px 0;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #eadbc8;
+    }
+
+    .mood > div {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--peach-2), var(--mint-2));
+    }
+
+    .cat-controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .cat-controls select {
+      min-width: 0;
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      background: #fffdf7;
+      color: var(--ink);
+      padding: 0 8px;
+      font-weight: 800;
+    }
+
+    .upgrade-card {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      align-items: start;
+      padding: 8px;
+    }
+
+    .upgrade-card .buy-btn {
+      width: 100%;
+    }
+
+    .reset-row {
+      margin-top: auto;
+      padding: 0 12px 12px;
+    }
+
+    .cats-column .cats {
+      flex: 1 1 auto;
+    }
+
+    .cats-column .cat-card {
+      grid-template-columns: 94px minmax(0, 1fr);
+      min-height: 112px;
+    }
+
+    .cats-column .cat-portrait {
+      width: 94px;
+      height: 94px;
+    }
+
+    .ops-panel .actions {
+      flex: 0 0 auto;
+    }
+
+    .ops-panel .action-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .ops-panel .big-btn {
+      min-height: 56px;
+      box-shadow: 0 5px 0 rgba(88, 184, 131, 0.18);
+    }
+
+    .ops-panel .big-btn strong {
+      font-size: 14px;
+    }
+
+    .ops-panel .big-btn span {
+      font-size: 10px;
+    }
+
+    .ops-panel {
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .ops-panel .orders {
+      flex: 0 0 58px;
+    }
+
+    .ops-panel .upgrades {
+      flex: 0 0 200px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      overflow: visible;
+    }
+
+    .ops-panel .upgrade-card {
+      gap: 4px;
+      padding: 7px;
+    }
+
+    .ops-panel .upgrade-card span {
+      display: none;
+    }
+
+    .ops-panel .buy-btn {
+      min-height: 28px;
+      padding: 5px 8px;
+    }
+
+    .ops-panel .reset-row {
+      padding: 0 8px 8px;
+    }
+
+    .ops-panel .reset-btn {
+      min-height: 34px;
+    }
+
+    .reset-btn {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid rgba(239, 124, 108, 0.38);
+      background: #fff0e8;
+      color: #9b4038;
+      font-weight: 900;
+    }
+
+    @media (max-width: 1080px) {
+      html,
+      body {
+        height: auto;
+        overflow: auto;
+      }
+
+      body {
+        min-height: 100vh;
+      }
+
+      .app {
+        height: auto;
+      }
+
+      .topbar,
+      .game-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .resources {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .sound-btn {
+        min-height: 44px;
+      }
+
+      .scene-card,
+      .panel {
+        height: auto;
+        min-height: 0;
+      }
+
+      .cafe-scene {
+        min-height: 500px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        padding: 10px;
+      }
+
+      .brand h1 {
+        font-size: 24px;
+      }
+
+      .resources,
+      .action-grid,
+      .order-card,
+      .upgrade-card,
+      .cat-controls,
+      .day-line {
+        grid-template-columns: 1fr;
+      }
+
+      .day-line {
+        display: grid;
+        align-items: start;
+      }
+
+      .day-line span {
+        text-align: left;
+      }
+
+      .resource strong {
+        font-size: 20px;
+      }
+
+      .cafe-scene {
+        min-height: 430px;
+      }
+
+      .scene-cats {
+        left: 4%;
+        right: 18%;
+        bottom: 34%;
+        height: 34%;
+      }
+
+      .scene-cat {
+        width: 92px;
+      }
+
+      .machine {
+        width: 92px;
+        height: 112px;
+        right: 8%;
+      }
+
+      .customer {
+        display: none;
+      }
+
+      .cat-card,
+      .cats-column .cat-card {
+        grid-template-columns: 64px minmax(0, 1fr);
+        min-height: 0;
+      }
+
+      .cat-portrait,
+      .cats-column .cat-portrait {
+        width: 64px;
+        height: 64px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" aria-label="猫咪咖啡店挂机小游戏">
+    <header class="topbar">
+      <section class="brand" aria-label="游戏标题">
+        <img class="logo-cat" src="assets/cat-mochi.png" alt="" />
+        <div>
+          <h1>猫咪咖啡店</h1>
+          <p>接订单、排岗位、照顾猫咪，把小店经营起来</p>
+        </div>
+      </section>
+
+      <section class="resources" aria-label="资源">
+        <div class="resource"><span>小鱼干</span><strong id="fishValue">0</strong></div>
+        <div class="resource"><span>咖啡豆</span><strong id="beansValue">0</strong></div>
+        <div class="resource"><span>咖啡</span><strong id="coffeeValue">0</strong></div>
+        <div class="resource"><span>口碑</span><strong id="repValue">0</strong></div>
+        <div class="resource"><span>被动收益</span><strong id="incomeValue">0/s</strong></div>
+      </section>
+
+      <button class="sound-btn" id="soundBtn" type="button">声音：开</button>
+    </header>
+
+    <div class="game-grid">
+      <section class="scene-card" aria-label="咖啡店">
+        <div class="day-strip">
+          <div class="day-line">
+            <h2 id="dayTitle">第 1 天营业</h2>
+            <span id="goalText">今日目标</span>
+          </div>
+          <div class="progress" aria-label="每日目标进度">
+            <div id="goalProgress"></div>
+          </div>
+        </div>
+
+        <div class="cafe-scene">
+          <div class="window" aria-hidden="true"></div>
+          <div class="cups" aria-hidden="true">
+            <div class="cup"></div>
+            <div class="cup"></div>
+            <div class="cup"></div>
+            <div class="cup"></div>
+          </div>
+          <div class="shelf" aria-hidden="true"></div>
+          <div class="machine" aria-hidden="true"></div>
+          <div class="customer" id="customerFigure" aria-hidden="true">
+            <div class="customer-head"></div>
+            <div class="customer-body"></div>
+          </div>
+          <div class="counter" aria-hidden="true"></div>
+          <div class="scene-cats" id="sceneCats" aria-label="场景猫咪"></div>
+        </div>
+
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="panel cats-column" aria-label="猫咪岗位">
+        <div class="panel-header">
+          <div>
+            <h2>猫咪岗位</h2>
+            <small>每只猫都是真 PNG 素材，可以点击场景里的猫听猫叫</small>
+          </div>
+          <div class="pill" id="catCount">1/5</div>
+        </div>
+        <div class="cats" id="cats"></div>
+      </section>
+
+      <section class="panel ops-panel" aria-label="经营">
+        <div class="panel-header">
+          <div>
+            <h2>经营动作</h2>
+            <small>猫咪岗位会改变经营节奏</small>
+          </div>
+          <div class="pill" id="moodAverage">心情 0%</div>
+        </div>
+
+        <div class="actions">
+          <div class="action-grid">
+            <button class="big-btn" id="brewBtn" type="button"><strong>手冲</strong><span id="brewMeta">消耗咖啡豆</span></button>
+            <button class="big-btn" id="buyBeansBtn" type="button"><strong>进豆</strong><span id="beansMeta">补充库存</span></button>
+            <button class="big-btn" id="feedBtn" type="button"><strong>喂猫</strong><span id="feedMeta">提升心情</span></button>
+            <button class="big-btn" id="inviteBtn" type="button"><strong>邀请</strong><span id="inviteMeta">解锁伙伴</span></button>
+          </div>
+
+          <div class="action-box">
+            <div class="metric-line"><span>拉花猫自动冲煮</span><strong id="autoCoffeeText">0/s</strong></div>
+            <div class="metric-line"><span>迎宾猫订单节奏</span><strong id="hostText">普通</strong></div>
+            <div class="metric-line"><span>收银猫订单加成</span><strong id="cashierText">+0%</strong></div>
+          </div>
+        </div>
+
+        <div class="panel-header">
+          <div>
+            <h2>顾客订单</h2>
+            <small>订单会流失，先做咖啡再接待</small>
+          </div>
+          <div class="pill" id="orderCount">0/3</div>
+        </div>
+        <div class="orders" id="orders"></div>
+
+        <div class="panel-header">
+          <div>
+            <h2>店铺升级</h2>
+            <small>升级让经营更有节奏</small>
+          </div>
+        </div>
+        <div class="upgrades" id="upgrades"></div>
+
+        <div class="reset-row">
+          <button class="reset-btn" id="resetBtn" type="button">重置存档</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const SAVE_KEY = "cat-cafe-idle-save-v1";
+    const OFFLINE_CAP_SECONDS = 8 * 60 * 60;
+    const MEOW_SOURCES = [
+      "assets/audio/cat-soft-mew.wav",
+      "assets/audio/cat-food-mew.wav"
+    ];
+
+    const cats = [
+      { id: "mochi", name: "麻糬", title: "柜台猫", image: "assets/cat-mochi.png", baseIncome: 0.25, unlockFish: 0, unlockRep: 0, note: "最会招手的收银员。", defaultRole: "cashier" },
+      { id: "latte", name: "拿铁", title: "拉花猫", image: "assets/cat-latte.png", baseIncome: 0.35, unlockFish: 90, unlockRep: 6, note: "端着拿铁时会特别自豪。", defaultRole: "barista" },
+      { id: "soda", name: "苏打", title: "迎宾猫", image: "assets/cat-soda.png", baseIncome: 0.5, unlockFish: 230, unlockRep: 18, note: "每次开门都像在谢幕。", defaultRole: "host" },
+      { id: "mikan", name: "蜜柑", title: "甜点猫", image: "assets/cat-mikan.png", baseIncome: 0.75, unlockFish: 560, unlockRep: 46, note: "把蛋糕看得比自己还重要。", defaultRole: "cashier" },
+      { id: "luna", name: "露娜", title: "夜班猫", image: "assets/cat-luna.png", baseIncome: 1.05, unlockFish: 1300, unlockRep: 110, note: "晚安可可的灵魂人物。", defaultRole: "lounge" }
+    ];
+
+    const roles = {
+      cashier: { label: "收银", description: "订单小鱼干更多" },
+      barista: { label: "拉花", description: "自动把咖啡豆做成咖啡" },
+      host: { label: "迎宾", description: "订单更耐心，队列更长" },
+      lounge: { label: "陪伴", description: "恢复心情并产生被动收益" }
+    };
+
+    const drinks = [
+      { id: "americano", name: "晨光美式", coffee: 1, fish: 14, rep: 1, patience: 22 },
+      { id: "latte", name: "云朵拿铁", coffee: 2, fish: 30, rep: 2, patience: 26 },
+      { id: "cake", name: "蛋糕套餐", coffee: 2, fish: 42, rep: 3, patience: 30 },
+      { id: "cocoa", name: "晚安可可", coffee: 3, fish: 68, rep: 5, patience: 34 }
+    ];
+
+    const upgrades = [
+      { id: "grinder", name: "细口手冲壶", effect: "每次手冲咖啡 +1", baseCost: 45, max: 5, growth: 1.85 },
+      { id: "menu", name: "季节菜单板", effect: "订单收益 +18%", baseCost: 120, max: 5, growth: 2 },
+      { id: "counter", name: "宽木柜台", effect: "订单上限和耐心提升", baseCost: 180, max: 4, growth: 2.15 },
+      { id: "cushion", name: "窗边猫窝", effect: "心情恢复更快", baseCost: 220, max: 5, growth: 2.05 },
+      { id: "beanJar", name: "密封豆罐", effect: "咖啡豆自动补货", baseCost: 260, max: 5, growth: 2.1 }
+    ];
+
+    const dom = {
+      fish: document.getElementById("fishValue"),
+      beans: document.getElementById("beansValue"),
+      coffee: document.getElementById("coffeeValue"),
+      rep: document.getElementById("repValue"),
+      income: document.getElementById("incomeValue"),
+      soundBtn: document.getElementById("soundBtn"),
+      dayTitle: document.getElementById("dayTitle"),
+      goalText: document.getElementById("goalText"),
+      goalProgress: document.getElementById("goalProgress"),
+      sceneCats: document.getElementById("sceneCats"),
+      customerFigure: document.getElementById("customerFigure"),
+      toast: document.getElementById("toast"),
+      orders: document.getElementById("orders"),
+      orderCount: document.getElementById("orderCount"),
+      cats: document.getElementById("cats"),
+      catCount: document.getElementById("catCount"),
+      moodAverage: document.getElementById("moodAverage"),
+      upgrades: document.getElementById("upgrades"),
+      brewBtn: document.getElementById("brewBtn"),
+      buyBeansBtn: document.getElementById("buyBeansBtn"),
+      feedBtn: document.getElementById("feedBtn"),
+      inviteBtn: document.getElementById("inviteBtn"),
+      resetBtn: document.getElementById("resetBtn"),
+      brewMeta: document.getElementById("brewMeta"),
+      beansMeta: document.getElementById("beansMeta"),
+      feedMeta: document.getElementById("feedMeta"),
+      inviteMeta: document.getElementById("inviteMeta"),
+      autoCoffeeText: document.getElementById("autoCoffeeText"),
+      hostText: document.getElementById("hostText"),
+      cashierText: document.getElementById("cashierText")
+    };
+
+    let audioContext = null;
+    let lastFrame = performance.now();
+    let renderTimer = 0;
+    let saveTimer = 0;
+    let toastTimer = 0;
+    let orderPulse = 0;
+    let meowCursor = 0;
+    let state = loadState();
+
+    function defaultState() {
+      return {
+        version: 2,
+        fish: 55,
+        beans: 12,
+        coffee: 0,
+        reputation: 0,
+        day: 1,
+        servedToday: 0,
+        totalServed: 0,
+        cats: ["mochi"],
+        catMood: { mochi: 78 },
+        catRole: { mochi: "cashier" },
+        upgrades: { grinder: 0, menu: 0, counter: 0, cushion: 0, beanJar: 0 },
+        orders: [],
+        nextOrderId: 1,
+        spawnTimer: 1.2,
+        sound: true,
+        lastSavedAt: Date.now()
+      };
+    }
+
+    function loadState() {
+      const base = defaultState();
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return base;
+
+      try {
+        const saved = JSON.parse(raw);
+        const merged = {
+          ...base,
+          ...saved,
+          fish: number(saved.fish, base.fish),
+          beans: number(saved.beans, base.beans),
+          coffee: number(saved.coffee, base.coffee),
+          reputation: number(saved.reputation, base.reputation),
+          day: Math.max(1, Math.floor(number(saved.day, base.day))),
+          servedToday: Math.max(0, Math.floor(number(saved.servedToday, base.servedToday))),
+          totalServed: Math.max(0, Math.floor(number(saved.totalServed, base.totalServed))),
+          nextOrderId: Math.max(1, Math.floor(number(saved.nextOrderId, base.nextOrderId))),
+          spawnTimer: Math.max(0.3, number(saved.spawnTimer, base.spawnTimer)),
+          sound: typeof saved.sound === "boolean" ? saved.sound : true,
+          lastSavedAt: Math.min(Date.now(), Math.max(0, number(saved.lastSavedAt, base.lastSavedAt)))
+        };
+
+        merged.cats = Array.isArray(saved.cats) ? saved.cats.filter((id) => cats.some((cat) => cat.id === id)) : base.cats;
+        if (!merged.cats.length) merged.cats = [...base.cats];
+        merged.catMood = saved.catMood && typeof saved.catMood === "object" ? saved.catMood : {};
+        merged.catRole = saved.catRole && typeof saved.catRole === "object" ? saved.catRole : {};
+        merged.upgrades = saved.upgrades && typeof saved.upgrades === "object" ? saved.upgrades : {};
+        merged.orders = Array.isArray(saved.orders) ? saved.orders.filter(isValidOrder).slice(0, getMaxOrders(merged)) : [];
+
+        cats.forEach((cat) => {
+          if (merged.cats.includes(cat.id)) {
+            merged.catMood[cat.id] = clamp(number(merged.catMood[cat.id], 72), 0, 100);
+            if (!roles[merged.catRole[cat.id]]) merged.catRole[cat.id] = cat.defaultRole;
+          }
+        });
+
+        upgrades.forEach((upgrade) => {
+          merged.upgrades[upgrade.id] = Math.floor(clamp(number(merged.upgrades[upgrade.id], 0), 0, upgrade.max));
+        });
+
+        const elapsed = Math.min(OFFLINE_CAP_SECONDS, Math.max(0, (Date.now() - merged.lastSavedAt) / 1000));
+        if (elapsed >= 60) {
+          const offlineFish = getPassiveFishPerSecond(merged) * elapsed * 0.75;
+          const offlineBeans = getBeanIncomePerSecond(merged) * elapsed * 0.75;
+          merged.fish += offlineFish;
+          merged.beans += offlineBeans;
+          setTimeout(() => showToast(`离线收益 +${format(offlineFish)} 小鱼干，+${format(offlineBeans)} 咖啡豆`), 400);
+        }
+
+        merged.lastSavedAt = Date.now();
+        return merged;
+      } catch (error) {
+        console.warn("Invalid save, starting fresh.", error);
+        return base;
+      }
+    }
+
+    function isValidOrder(order) {
+      return order && drinks.some((drink) => drink.id === order.drinkId) && number(order.patience, -1) > 0;
+    }
+
+    function number(value, fallback) {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : fallback;
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function format(value) {
+      if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+      if (value >= 10000) return `${(value / 1000).toFixed(1)}K`;
+      if (value >= 100) return `${Math.floor(value)}`;
+      if (value >= 10) return `${value.toFixed(1)}`;
+      return `${value.toFixed(2)}`;
+    }
+
+    function saveState() {
+      state.lastSavedAt = Date.now();
+      localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    }
+
+    function level(id, source = state) {
+      return number(source.upgrades[id], 0);
+    }
+
+    function catMood(id, source = state) {
+      return clamp(number(source.catMood[id], 70), 0, 100);
+    }
+
+    function rolePower(role, source = state) {
+      return source.cats.reduce((sum, id) => {
+        if (source.catRole[id] !== role) return sum;
+        return sum + 0.45 + catMood(id, source) / 100;
+      }, 0);
+    }
+
+    function averageMood(source = state) {
+      if (!source.cats.length) return 0;
+      return source.cats.reduce((sum, id) => sum + catMood(id, source), 0) / source.cats.length;
+    }
+
+    function getMaxOrders(source = state) {
+      return 3 + Math.floor(level("counter", source) / 2) + Math.floor(rolePower("host", source) / 2);
+    }
+
+    function getSpawnInterval(source = state) {
+      return clamp(7.2 - source.day * 0.15 - rolePower("host", source) * 0.8, 2.8, 7.2);
+    }
+
+    function getPatienceMultiplier(source = state) {
+      return 1 + level("counter", source) * 0.08 + rolePower("host", source) * 0.1;
+    }
+
+    function getBrewAmount() {
+      return 1 + level("grinder");
+    }
+
+    function getBrewCost() {
+      return 2;
+    }
+
+    function getBuyBeansCost() {
+      return Math.round(10 + state.day * 1.5);
+    }
+
+    function getFeedCost() {
+      return Math.round(16 + state.cats.length * 7 + state.day * 2);
+    }
+
+    function getMenuMultiplier(source = state) {
+      return 1 + level("menu", source) * 0.18 + rolePower("cashier", source) * 0.11;
+    }
+
+    function getPassiveFishPerSecond(source = state) {
+      const catBase = source.cats.reduce((sum, id) => {
+        const cat = cats.find((item) => item.id === id);
+        return sum + (cat ? cat.baseIncome * (0.3 + catMood(id, source) / 100) : 0);
+      }, 0);
+      return catBase * (0.35 + rolePower("lounge", source) * 0.22);
+    }
+
+    function getBeanIncomePerSecond(source = state) {
+      return 0.018 + level("beanJar", source) * 0.045;
+    }
+
+    function getAutoCoffeePerSecond(source = state) {
+      return rolePower("barista", source) * 0.075;
+    }
+
+    function dayGoal(day = state.day) {
+      return {
+        orders: Math.min(8 + Math.floor(day * 1.4), 26),
+        rewardFish: 65 + day * 24,
+        rewardRep: 4 + Math.floor(day * 0.8)
+      };
+    }
+
+    function getNextCat() {
+      return cats.find((cat) => !state.cats.includes(cat.id));
+    }
+
+    function getUpgradeCost(upgrade) {
+      return Math.round(upgrade.baseCost * Math.pow(upgrade.growth, level(upgrade.id)));
+    }
+
+    function orderReward(drink) {
+      const moodBoost = 0.78 + averageMood() / 100;
+      return drink.fish * moodBoost * getMenuMultiplier();
+    }
+
+    function orderRep(drink) {
+      return drink.rep * (1 + rolePower("host") * 0.04);
+    }
+
+    function createAudio() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioContext.state === "suspended") {
+        audioContext.resume();
+      }
+      return audioContext;
+    }
+
+    function tone(freq, duration, type, gain, delay = 0) {
+      if (!state.sound) return;
+      const audio = createAudio();
+      const osc = audio.createOscillator();
+      const envelope = audio.createGain();
+      osc.frequency.value = freq;
+      osc.type = type;
+      envelope.gain.setValueAtTime(0.0001, audio.currentTime + delay);
+      envelope.gain.exponentialRampToValueAtTime(gain, audio.currentTime + delay + 0.015);
+      envelope.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + delay + duration);
+      osc.connect(envelope);
+      envelope.connect(audio.destination);
+      osc.start(audio.currentTime + delay);
+      osc.stop(audio.currentTime + delay + duration + 0.02);
+    }
+
+    function sfx(name) {
+      if (!state.sound) return;
+      if (name === "brew") {
+        tone(280, 0.08, "triangle", 0.055);
+        tone(420, 0.1, "sine", 0.045, 0.08);
+      } else if (name === "serve") {
+        tone(660, 0.08, "sine", 0.06);
+        tone(880, 0.12, "sine", 0.045, 0.08);
+      } else if (name === "feed") {
+        tone(220, 0.18, "triangle", 0.04);
+        tone(330, 0.18, "triangle", 0.035, 0.08);
+      } else if (name === "unlock") {
+        [523, 659, 784, 1046].forEach((freq, index) => tone(freq, 0.12, "sine", 0.045, index * 0.07));
+      } else if (name === "buy") {
+        tone(510, 0.08, "square", 0.035);
+      } else if (name === "error") {
+        tone(130, 0.15, "sawtooth", 0.035);
+      } else if (name === "expire") {
+        tone(180, 0.12, "triangle", 0.035);
+        tone(150, 0.16, "triangle", 0.03, 0.1);
+      }
+    }
+
+    function playCatMeow() {
+      if (!state.sound) return;
+      const source = MEOW_SOURCES[meowCursor % MEOW_SOURCES.length];
+      meowCursor += 1;
+      const audio = new Audio(source);
+      audio.volume = 0.42;
+      audio.play().catch(() => {});
+    }
+
+    function showToast(message) {
+      dom.toast.textContent = message;
+      dom.toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => dom.toast.classList.remove("show"), 2300);
+    }
+
+    function markOrderPulse() {
+      orderPulse = 0.25;
+      dom.customerFigure.style.setProperty("--bounce", "-12px");
+      setTimeout(() => dom.customerFigure.style.setProperty("--bounce", "0px"), 180);
+    }
+
+    function animateSceneCat(id) {
+      const node = dom.sceneCats.querySelector(`[data-cat-scene="${id}"]`);
+      if (!node) return;
+      node.classList.remove("meow-pop");
+      void node.offsetWidth;
+      node.classList.add("meow-pop");
+      setTimeout(() => node.classList.remove("meow-pop"), 460);
+    }
+
+    function petSceneCat(id) {
+      const cat = cats.find((item) => item.id === id);
+      if (!cat) return;
+      animateSceneCat(id);
+      showToast(`${cat.name}：喵～`);
+      playCatMeow();
+    }
+
+    function brewCoffee() {
+      const cost = getBrewCost();
+      if (state.beans < cost) {
+        showToast("咖啡豆不够，先去进货");
+        sfx("error");
+        return;
+      }
+      state.beans -= cost;
+      state.coffee += getBrewAmount();
+      showToast(`咖啡 +${getBrewAmount()}`);
+      sfx("brew");
+      saveState();
+      renderAll();
+    }
+
+    function buyBeans() {
+      const cost = getBuyBeansCost();
+      if (state.fish < cost) {
+        showToast("小鱼干不够进货");
+        sfx("error");
+        return;
+      }
+      state.fish -= cost;
+      state.beans += 10 + level("beanJar") * 3;
+      showToast("咖啡豆补货完成");
+      sfx("buy");
+      saveState();
+      renderAll();
+    }
+
+    function feedCat() {
+      const cost = getFeedCost();
+      if (state.fish < cost) {
+        showToast("小鱼干不够喂猫");
+        sfx("error");
+        return;
+      }
+      const target = [...state.cats].sort((a, b) => catMood(a) - catMood(b))[0];
+      state.fish -= cost;
+      state.catMood[target] = Math.min(100, catMood(target) + 30);
+      const cat = cats.find((item) => item.id === target);
+      showToast(`${cat.name} 开心起来了`);
+      sfx("feed");
+      playCatMeow();
+      saveState();
+      renderAll();
+      setTimeout(() => animateSceneCat(target), 80);
+    }
+
+    function inviteCat() {
+      const cat = getNextCat();
+      if (!cat) {
+        showToast("猫咪已经全员到齐");
+        sfx("error");
+        return;
+      }
+      if (state.fish < cat.unlockFish || state.reputation < cat.unlockRep) {
+        showToast(`${cat.name} 需要 ${cat.unlockFish} 小鱼干和 ${cat.unlockRep} 口碑`);
+        sfx("error");
+        return;
+      }
+      state.fish -= cat.unlockFish;
+      state.reputation -= cat.unlockRep;
+      state.cats.push(cat.id);
+      state.catMood[cat.id] = 74;
+      state.catRole[cat.id] = cat.defaultRole;
+      showToast(`${cat.name} 加入了咖啡店`);
+      sfx("unlock");
+      saveState();
+      renderAll();
+      playCatMeow();
+      setTimeout(() => animateSceneCat(cat.id), 80);
+    }
+
+    function serveOrder(id) {
+      const index = state.orders.findIndex((order) => order.id === id);
+      if (index < 0) return;
+      const order = state.orders[index];
+      const drink = drinks.find((item) => item.id === order.drinkId);
+      if (!drink) return;
+      if (state.coffee < drink.coffee) {
+        showToast(`需要 ${drink.coffee} 杯咖啡`);
+        sfx("error");
+        return;
+      }
+      const fish = orderReward(drink);
+      const rep = orderRep(drink);
+      state.coffee -= drink.coffee;
+      state.fish += fish;
+      state.reputation += rep;
+      state.servedToday += 1;
+      state.totalServed += 1;
+      state.orders.splice(index, 1);
+      markOrderPulse();
+      showToast(`${drink.name} 完成：+${format(fish)} 小鱼干，+${format(rep)} 口碑`);
+      sfx("serve");
+      checkDayGoal();
+      saveState();
+      renderAll();
+    }
+
+    function buyUpgrade(id) {
+      const upgrade = upgrades.find((item) => item.id === id);
+      if (!upgrade) return;
+      const current = level(id);
+      if (current >= upgrade.max) {
+        showToast("这项已经满级");
+        sfx("error");
+        return;
+      }
+      const cost = getUpgradeCost(upgrade);
+      if (state.fish < cost) {
+        showToast("小鱼干不够升级");
+        sfx("error");
+        return;
+      }
+      state.fish -= cost;
+      state.upgrades[id] = current + 1;
+      showToast(`${upgrade.name} 升到 Lv.${state.upgrades[id]}`);
+      sfx("buy");
+      saveState();
+      renderAll();
+    }
+
+    function setCatRole(id, role) {
+      if (!state.cats.includes(id) || !roles[role]) return;
+      state.catRole[id] = role;
+      const cat = cats.find((item) => item.id === id);
+      showToast(`${cat.name} 开始负责${roles[role].label}`);
+      sfx("buy");
+      playCatMeow();
+      saveState();
+      renderAll();
+      setTimeout(() => animateSceneCat(id), 80);
+    }
+
+    function spawnOrder() {
+      if (state.orders.length >= getMaxOrders()) return;
+      const available = drinks.filter((drink) => {
+        if (drink.id === "cake") return state.day >= 2 || state.reputation >= 12;
+        if (drink.id === "cocoa") return state.day >= 4 || state.reputation >= 36;
+        return true;
+      });
+      const drink = available[Math.floor(Math.random() * available.length)];
+      const maxPatience = drink.patience * getPatienceMultiplier();
+      state.orders.push({
+        id: state.nextOrderId++,
+        drinkId: drink.id,
+        patience: maxPatience,
+        maxPatience
+      });
+    }
+
+    function checkDayGoal() {
+      const goal = dayGoal();
+      if (state.servedToday < goal.orders) return;
+      state.fish += goal.rewardFish;
+      state.reputation += goal.rewardRep;
+      state.day += 1;
+      state.servedToday = 0;
+      state.orders = [];
+      state.spawnTimer = 1.5;
+      showToast(`今日目标完成！奖励 +${goal.rewardFish} 小鱼干，+${goal.rewardRep} 口碑`);
+      sfx("unlock");
+    }
+
+    function tick(dt) {
+      state.fish += getPassiveFishPerSecond() * dt;
+      state.beans += getBeanIncomePerSecond() * dt;
+
+      const autoCoffee = getAutoCoffeePerSecond();
+      if (autoCoffee > 0 && state.beans > 0) {
+        const possibleCoffee = Math.min(autoCoffee * dt, state.beans / 1.7);
+        state.beans -= possibleCoffee * 1.7;
+        state.coffee += possibleCoffee;
+      }
+
+      const decay = Math.max(0.002, 0.008 - level("cushion") * 0.0009);
+      const loungeRecovery = rolePower("lounge") * (0.008 + level("cushion") * 0.002);
+      state.cats.forEach((id) => {
+        state.catMood[id] = clamp(catMood(id) - decay * dt + loungeRecovery * dt, 18, 100);
+      });
+
+      state.orders.forEach((order) => {
+        order.patience -= dt;
+      });
+      const before = state.orders.length;
+      state.orders = state.orders.filter((order) => order.patience > 0);
+      if (state.orders.length < before) {
+        state.reputation = Math.max(0, state.reputation - 0.5);
+        showToast("有顾客等太久离开了");
+        sfx("expire");
+      }
+
+      state.spawnTimer -= dt;
+      if (state.spawnTimer <= 0) {
+        spawnOrder();
+        state.spawnTimer = getSpawnInterval();
+      }
+
+      orderPulse = Math.max(0, orderPulse - dt);
+      renderTimer += dt;
+      saveTimer += dt;
+      if (renderTimer >= 0.2) {
+        renderTimer = 0;
+        renderRealtime();
+      }
+      if (saveTimer >= 2) {
+        saveTimer = 0;
+        saveState();
+      }
+    }
+
+    function renderAll() {
+      renderResources();
+      renderOrders();
+      renderCats();
+      renderSceneCats();
+      renderUpgrades();
+    }
+
+    function renderRealtime() {
+      renderResources();
+      renderOrders();
+      renderUpgrades();
+    }
+
+    function renderResources() {
+      const goal = dayGoal();
+      const progress = clamp((state.servedToday / goal.orders) * 100, 0, 100);
+      const nextCat = getNextCat();
+
+      dom.fish.textContent = format(state.fish);
+      dom.beans.textContent = format(state.beans);
+      dom.coffee.textContent = format(state.coffee);
+      dom.rep.textContent = format(state.reputation);
+      dom.income.textContent = `${format(getPassiveFishPerSecond())}/s`;
+      dom.dayTitle.textContent = `第 ${state.day} 天营业`;
+      dom.goalText.textContent = `完成 ${state.servedToday}/${goal.orders} 单，奖励 ${goal.rewardFish} 小鱼干 + ${goal.rewardRep} 口碑`;
+      dom.goalProgress.style.width = `${progress}%`;
+      dom.moodAverage.textContent = `心情 ${Math.round(averageMood())}%`;
+      dom.catCount.textContent = `${state.cats.length}/${cats.length}`;
+      dom.orderCount.textContent = `${state.orders.length}/${getMaxOrders()}`;
+      dom.soundBtn.textContent = state.sound ? "声音：开" : "声音：关";
+      dom.brewMeta.textContent = `-${getBrewCost()}豆 +${getBrewAmount()}杯`;
+      dom.beansMeta.textContent = `${getBuyBeansCost()}鱼 +${10 + level("beanJar") * 3}豆`;
+      dom.feedMeta.textContent = `${getFeedCost()}鱼`;
+      dom.inviteMeta.textContent = nextCat ? `${nextCat.name} ${nextCat.unlockFish}/${nextCat.unlockRep}` : "全员到齐";
+      dom.autoCoffeeText.textContent = `${format(getAutoCoffeePerSecond())}/s`;
+      dom.hostText.textContent = `${getMaxOrders()} 单上限`;
+      dom.cashierText.textContent = `+${Math.round((getMenuMultiplier() - 1 - level("menu") * 0.18) * 100)}%`;
+
+      dom.brewBtn.disabled = state.beans < getBrewCost();
+      dom.buyBeansBtn.disabled = state.fish < getBuyBeansCost();
+      dom.feedBtn.disabled = state.fish < getFeedCost();
+      dom.inviteBtn.disabled = !nextCat || state.fish < nextCat.unlockFish || state.reputation < nextCat.unlockRep;
+    }
+
+    function renderOrders() {
+      if (!state.orders.length) {
+        dom.orders.innerHTML = `<div class="empty">暂无订单，迎宾猫会带来客人。</div>`;
+        return;
+      }
+      dom.orders.innerHTML = state.orders.map((order) => {
+        const drink = drinks.find((item) => item.id === order.drinkId);
+        const patience = clamp((order.patience / order.maxPatience) * 100, 0, 100);
+        const canServe = state.coffee >= drink.coffee;
+        return `
+          <article class="order-card">
+            <div class="order-main">
+              <strong>${drink.name}</strong>
+              <span>需要 ${drink.coffee} 咖啡 · 收益 ${format(orderReward(drink))} 小鱼干 · ${format(orderRep(drink))} 口碑</span>
+              <div class="patience" aria-label="耐心"><div style="width:${patience}%"></div></div>
+            </div>
+            <button class="serve-btn" data-serve="${order.id}" type="button" ${canServe ? "" : "disabled"}>上餐</button>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderCats() {
+      dom.cats.innerHTML = cats.map((cat) => {
+        const unlocked = state.cats.includes(cat.id);
+        const mood = unlocked ? catMood(cat.id) : 0;
+        if (!unlocked) {
+          return `
+            <article class="cat-card locked">
+              <img class="cat-portrait" src="${cat.image}" alt="${cat.name}" />
+              <div class="cat-info">
+                <div class="cat-title"><strong>${cat.name}</strong><span>${cat.title}</span></div>
+                <span>${cat.unlockFish} 小鱼干 · ${cat.unlockRep} 口碑后加入</span>
+                <div class="mood"><div style="width:0%"></div></div>
+                <span>${cat.note}</span>
+              </div>
+            </article>
+          `;
+        }
+        return `
+          <article class="cat-card">
+            <img class="cat-portrait" src="${cat.image}" alt="${cat.name}" />
+            <div class="cat-info">
+              <div class="cat-title"><strong>${cat.name}</strong><span>${cat.title}</span></div>
+              <span>${cat.note}</span>
+              <div class="mood" aria-label="${cat.name} 心情"><div style="width:${mood}%"></div></div>
+              <div class="cat-controls">
+                <select data-role="${cat.id}" aria-label="${cat.name} 岗位">
+                  ${Object.entries(roles).map(([id, role]) => `<option value="${id}" ${state.catRole[cat.id] === id ? "selected" : ""}>${role.label}：${role.description}</option>`).join("")}
+                </select>
+                <span>${Math.round(mood)}%</span>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderSceneCats() {
+      const positions = [
+        { x: 18, y: 12, z: 5 },
+        { x: 37, y: 5, z: 4 },
+        { x: 54, y: 14, z: 3 },
+        { x: 70, y: 7, z: 2 },
+        { x: 84, y: 16, z: 1 }
+      ];
+      dom.sceneCats.innerHTML = state.cats.map((id, index) => {
+        const cat = cats.find((item) => item.id === id);
+        const pos = positions[index] || positions[0];
+        const role = roles[state.catRole[id]] || roles.cashier;
+        return `
+          <div class="scene-cat cat-motion-${index % 4}" data-cat-scene="${cat.id}" role="button" tabindex="0" aria-label="摸摸${cat.name}" style="left:${pos.x}%; bottom:${pos.y}%; z-index:${pos.z}; animation-delay:${index * 0.2}s">
+            <img src="${cat.image}" alt="" />
+            <div class="role-tag">${role.label}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderUpgrades() {
+      dom.upgrades.innerHTML = upgrades.map((upgrade) => {
+        const current = level(upgrade.id);
+        const maxed = current >= upgrade.max;
+        const cost = maxed ? "满级" : getUpgradeCost(upgrade);
+        return `
+          <article class="upgrade-card">
+            <div>
+              <strong>${upgrade.name} Lv.${current}/${upgrade.max}</strong>
+              <span>${upgrade.effect}</span>
+            </div>
+            <button class="buy-btn" data-upgrade="${upgrade.id}" type="button" ${maxed || state.fish < getUpgradeCost(upgrade) ? "disabled" : ""}>${cost}</button>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function resetSave() {
+      if (!confirm("确定重置猫咪咖啡店吗？")) return;
+      localStorage.removeItem(SAVE_KEY);
+      state = defaultState();
+      showToast("存档已重置");
+      sfx("buy");
+      saveState();
+      renderAll();
+    }
+
+    dom.brewBtn.addEventListener("click", brewCoffee);
+    dom.buyBeansBtn.addEventListener("click", buyBeans);
+    dom.feedBtn.addEventListener("click", feedCat);
+    dom.inviteBtn.addEventListener("click", inviteCat);
+    dom.resetBtn.addEventListener("click", resetSave);
+    dom.soundBtn.addEventListener("click", () => {
+      state.sound = !state.sound;
+      if (state.sound) {
+        createAudio();
+        sfx("buy");
+      }
+      saveState();
+      renderResources();
+    });
+    dom.orders.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-serve]");
+      if (button) serveOrder(Number(button.dataset.serve));
+    });
+    dom.cats.addEventListener("change", (event) => {
+      const select = event.target.closest("[data-role]");
+      if (select) setCatRole(select.dataset.role, select.value);
+    });
+    dom.sceneCats.addEventListener("click", (event) => {
+      const catNode = event.target.closest("[data-cat-scene]");
+      if (catNode) petSceneCat(catNode.dataset.catScene);
+    });
+    dom.sceneCats.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const catNode = event.target.closest("[data-cat-scene]");
+      if (!catNode) return;
+      event.preventDefault();
+      petSceneCat(catNode.dataset.catScene);
+    });
+    dom.upgrades.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-upgrade]");
+      if (button) buyUpgrade(button.dataset.upgrade);
+    });
+    window.addEventListener("beforeunload", saveState);
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) saveState();
+    });
+
+    function loop(now) {
+      const dt = Math.min(0.05, (now - lastFrame) / 1000 || 0);
+      lastFrame = now;
+      tick(dt);
+      requestAnimationFrame(loop);
+    }
+
+    renderAll();
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>
