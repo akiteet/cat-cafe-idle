@@ -4,7 +4,7 @@
 
 ## 直接进入
 
-- 在线游玩入口：[开始游戏](https://akiteet.github.io/cat-cafe-idle/cat-cafe-idle.html)
+- 在线游玩入口：[开始游戏](https://akiteet.github.io/cat-cafe-idle/)
 - 仓库文件入口：[cat-cafe-idle.html](./cat-cafe-idle.html)
 
 如果在线入口暂时打不开，需要先在 GitHub 仓库的 `Settings -> Pages` 中启用 GitHub Pages，并选择 `main` 分支作为发布来源。
