@@ -2,6 +2,13 @@
 
 一个清新手绘风的猫咪咖啡店挂机小游戏。玩家可以制作咖啡、接待顾客、喂猫、邀请新猫咪、安排猫咪岗位，并通过升级店铺提升经营效率。
 
+## 直接进入
+
+- 在线游玩入口：[开始游戏](https://akiteet.github.io/cat-cafe-idle/cat-cafe-idle.html)
+- 仓库文件入口：[cat-cafe-idle.html](./cat-cafe-idle.html)
+
+如果在线入口暂时打不开，需要先在 GitHub 仓库的 `Settings -> Pages` 中启用 GitHub Pages，并选择 `main` 分支作为发布来源。
+
 ## 在线/本地运行
 
 这是一个纯前端单文件小游戏，不需要安装依赖。
